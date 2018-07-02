@@ -4,14 +4,32 @@ import classes from './Burger.css';
 import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
 
 const buerger = (props) => {
-  return (
-    <div className={classes.Burger}>
-        <BurgerIngredient type="bread-top" />
-        <BurgerIngredient type="cheese" />
-        <BurgerIngredient type="meat" />
-        <BurgerIngredient type="bread-bottom" />
-    </div>
-  );
+
+    let transformedIngredients = Object.keys(props.ingredients)
+        // will return an array with arrays of ingredients
+        .map(ingKey => {
+            // wil return an array with the N number of ingredients
+            return [...Array(props.ingredients[ingKey])].map((_, i) => {
+                return <BurgerIngredient key={ingKey + i } type={ingKey}/>
+            })
+        })
+        // Array flatting
+        .reduce((arr, ele) => {
+            return arr.concat(ele);
+        }, []);
+
+    console.log(transformedIngredients);
+
+    if(transformedIngredients.length === 0){
+        transformedIngredients = <p>Please start adding ingredients!</p>
+    }
+    return (
+        <div className={classes.Burger}>
+            <BurgerIngredient type="bread-top"/>
+            {transformedIngredients}
+            <BurgerIngredient type="bread-bottom"/>
+        </div>
+    );
 };
 
 export default buerger;
